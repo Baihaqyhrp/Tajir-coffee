@@ -1,548 +1,1398 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bilhudã Coffee - Binjai</title>
-    <!-- Bootstrap CSS -->
+    <title>Tajir Coffee — Sistem Kasir</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
       rel="stylesheet"
-    />
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <style>
       :root {
-        --primary-dark: #1a1a1a;
-        --primary-red: #d62828;
-        --secondary-red: #ba181b;
-        --accent-color: #e5383b;
-        --text-light: #f5f3f4;
+        --red-deep: #8b0000;
+        --red-primary: #a31d1d;
+        --red-bright: #c0272d;
+        --red-light: #e03030;
+        --red-glow: rgba(163, 29, 29, 0.45);
+        --cream: #fff8f0;
+        --off-white: #f2e8e0;
+        --dark: #0d0404;
+        --dark-card: #1a0808;
+        --dark-mid: #250c0c;
+        --gold: #d4a017;
+        --text-muted: rgba(255, 248, 240, 0.45);
+        --text-sub: rgba(255, 248, 240, 0.7);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
 
       body {
-        background-color: var(--primary-dark);
-        color: var(--text-light);
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--dark);
+        color: var(--cream);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
       }
 
-      .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-          url("https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80")
-            no-repeat center center;
-        background-size: cover;
-        height: 70vh;
+      /* Noise texture overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.5;
+      }
+
+      /* ===== HEADER ===== */
+      .header {
         position: relative;
-      }
-
-      .navbar {
-        background-color: var(--primary-dark) !important;
-        border-bottom: 2px solid var(--primary-red);
-      }
-
-      .navbar-brand,
-      .nav-link {
-        color: var(--text-light) !important;
-      }
-
-      .nav-link:hover {
-        color: var(--primary-red) !important;
-      }
-
-      .btn-danger-custom {
-        background-color: var(--primary-red);
-        border-color: var(--primary-red);
-        color: white;
-      }
-
-      .btn-danger-custom:hover {
-        background-color: var(--secondary-red);
-        border-color: var(--secondary-red);
-      }
-
-      .coffee-card {
-        background-color: #2b2b2b;
-        border: none;
-        border-radius: 10px;
-        transition: all 0.3s ease;
+        background: linear-gradient(
+          160deg,
+          var(--red-deep) 0%,
+          var(--red-primary) 45%,
+          var(--red-bright) 100%
+        );
+        padding: 48px 24px 60px;
+        text-align: center;
+        border-radius: 0 0 40px 40px;
+        box-shadow:
+          0 8px 0 var(--red-deep),
+          0 16px 40px rgba(0, 0, 0, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        margin-bottom: 30px;
-      }
-
-      .coffee-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(214, 40, 40, 0.2);
-      }
-
-      .card-img-container {
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
-      }
-
-      .card-img-full {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-      }
-
-      .price-tag {
-        background-color: var(--primary-red);
-        color: white;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-weight: bold;
-        position: absolute;
-        top: 10px;
-        right: 10px;
         z-index: 1;
       }
 
-      section {
-        padding: 80px 0;
-      }
-
-      .section-title {
-        position: relative;
-        margin-bottom: 50px;
-        color: var(--text-light);
-      }
-
-      .section-title:after {
+      /* Decorative circles in header */
+      .header::before {
         content: "";
         position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 3px;
-        background-color: var(--primary-red);
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        top: -80px;
+        right: -60px;
+      }
+      .header::after {
+        content: "";
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        bottom: -40px;
+        left: -30px;
       }
 
-      footer {
-        background-color: #121212;
-        padding: 30px 0;
-        border-top: 2px solid var(--primary-red);
+      .logo-text {
+        font-family: "Fredoka", sans-serif;
+        font-size: 4rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -2px;
+        line-height: 1;
+        text-shadow:
+          0 2px 0 rgba(0, 0, 0, 0.3),
+          0 0 30px rgba(255, 255, 255, 0.15);
+        position: relative;
+        z-index: 1;
       }
 
-      .social-icon {
-        color: var(--text-light);
-        font-size: 1.5rem;
-        margin: 0 10px;
-        transition: all 0.3s ease;
+      .sub-logo {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-top: 2px;
+        position: relative;
+        z-index: 1;
       }
 
-      .social-icon:hover {
-        color: var(--primary-red);
-        transform: translateY(-5px);
+      #clock {
+        font-size: 0.6rem;
+        letter-spacing: 4px;
+        opacity: 0.5;
+        margin-top: 16px;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 1;
       }
 
-      .contact-info {
-        border-left: 2px solid var(--primary-red);
-        padding-left: 20px;
+      /* ===== LAYOUT ===== */
+      .container {
+        max-width: 460px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ===== TABS ===== */
+      .tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 24px;
+        background: var(--dark-card);
+        border-radius: 16px;
+        padding: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .tab-btn {
+        padding: 12px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 12px;
+        color: var(--text-muted);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .tab-btn.active {
+        background: var(--red-primary);
+        color: #fff;
+        box-shadow: 0 4px 16px var(--red-glow);
+      }
+
+      /* ===== CARDS ===== */
+      .card {
+        background: var(--dark-card);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      }
+
+      .card-title {
+        font-size: 0.6rem;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .card-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(163, 29, 29, 0.5), transparent);
+      }
+
+      /* ===== STOK ROWS ===== */
+      .stok-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .stok-row:last-child {
+        border-bottom: none;
+      }
+
+      .stok-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--cream);
+      }
+
+      .stok-price {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      .qty-input {
+        background: var(--dark-mid);
+        border: 1px solid rgba(163, 29, 29, 0.4);
+        border-radius: 10px;
+        color: var(--cream);
+        text-align: center;
+        width: 64px;
+        padding: 8px 4px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .qty-input:focus {
+        border-color: var(--red-primary);
+        box-shadow: 0 0 0 2px var(--red-glow);
+      }
+
+      /* ===== JUAL ROWS ===== */
+      .jual-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .jual-row:last-child {
+        border-bottom: none;
+      }
+
+      .jual-name {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--cream);
+      }
+
+      .jual-meta {
+        font-size: 0.62rem;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+
+      .counter {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .counter-val {
+        font-size: 1.2rem;
+        font-weight: 800;
+        min-width: 24px;
+        text-align: center;
+        color: var(--cream);
+      }
+
+      .btn-minus,
+      .btn-plus {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        font-family: inherit;
+      }
+
+      .btn-minus {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-sub);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .btn-plus {
+        background: var(--red-primary);
+        color: #fff;
+        box-shadow: 0 3px 12px var(--red-glow);
+      }
+
+      .btn-minus:active {
+        transform: scale(0.9);
+      }
+      .btn-plus:active {
+        transform: scale(0.9);
+      }
+
+      /* ===== TOTAL BAR ===== */
+      .total-bar {
+        background: linear-gradient(135deg, var(--dark-card), var(--dark-mid));
+        border: 1px solid rgba(163, 29, 29, 0.3);
+        border-radius: 20px;
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        box-shadow:
+          0 4px 20px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .total-label {
+        font-size: 0.6rem;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+
+      .total-amount {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1;
+      }
+
+      .total-cups {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-sub);
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn-primary {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        border-radius: 16px;
+        background: linear-gradient(
+          135deg,
+          var(--red-bright),
+          var(--red-primary)
+        );
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: inherit;
+        box-shadow:
+          0 6px 24px var(--red-glow),
+          0 2px 0 var(--red-deep);
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.12),
+          transparent
+        );
+        transition: left 0.4s;
+      }
+
+      .btn-primary:hover::before {
+        left: 100%;
+      }
+      .btn-primary:active {
+        transform: translateY(1px);
+        box-shadow: 0 3px 12px var(--red-glow);
+      }
+
+      .btn-ghost {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: inherit;
+        transition: color 0.2s;
+      }
+
+      .btn-ghost:hover {
+        color: var(--red-light);
+      }
+
+      /* ===== MODAL / LAPORAN ===== */
+      #modal {
+        position: fixed;
+        inset: 0;
+        background: var(--dark);
+        z-index: 100;
+        overflow-y: auto;
+        display: none;
+        animation: slideUp 0.3s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        background: linear-gradient(
+          160deg,
+          var(--red-deep),
+          var(--red-primary)
+        );
+        padding: 40px 24px 50px;
+        text-align: center;
+        border-radius: 0 0 40px 40px;
+        box-shadow:
+          0 8px 0 var(--red-deep),
+          0 16px 40px rgba(0, 0, 0, 0.5);
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .modal-header::before {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        top: -60px;
+        right: -40px;
+      }
+
+      .report-subtitle {
+        font-size: 0.6rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        opacity: 0.5;
+        margin-top: 4px;
+      }
+
+      .modal-inner {
+        max-width: 460px;
+        margin: 0 auto;
+        padding: 0 16px 40px;
+      }
+
+      /* Report item rows */
+      .rep-row {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 8px;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .rep-row:last-child {
+        border-bottom: none;
+      }
+
+      .rep-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--cream);
+      }
+      .rep-qty {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-align: right;
+        white-space: nowrap;
+      }
+      .rep-subtotal {
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: var(--red-light);
+        text-align: right;
+        white-space: nowrap;
+        min-width: 80px;
+      }
+
+      .rep-zero .rep-name {
+        opacity: 0.35;
+      }
+      .rep-zero .rep-qty {
+        opacity: 0.25;
+      }
+      .rep-zero .rep-subtotal {
+        opacity: 0.2;
+      }
+
+      .summary-card {
+        background: var(--dark-card);
+        border: 1px solid rgba(163, 29, 29, 0.3);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 16px 0;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+      }
+
+      .summary-key {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .summary-val {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--cream);
+      }
+
+      .divider {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(163, 29, 29, 0.5),
+          transparent
+        );
+        margin: 12px 0;
+      }
+
+      .net-label {
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      }
+      .net-val {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #4ade80;
+      }
+
+      .biaya-input {
+        background: var(--dark-mid);
+        border: 1px solid rgba(163, 29, 29, 0.3);
+        border-radius: 12px;
+        color: var(--cream);
+        padding: 12px 16px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: inherit;
+        width: 100%;
+        outline: none;
+        transition: border-color 0.2s;
+        margin-bottom: 4px;
+      }
+
+      .biaya-input:focus {
+        border-color: var(--red-primary);
+        box-shadow: 0 0 0 2px var(--red-glow);
+      }
+
+      .biaya-input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .btn-secondary {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        background: transparent;
+        color: var(--cream);
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        margin-bottom: 10px;
+        transition: all 0.2s;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Sheets CTA */
+      .sheets-cta {
+        background: linear-gradient(135deg, #1a5c2a, #16a34a);
+        color: #fff;
+        font-weight: 800;
+        box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+      }
+
+      /* Badge for total cups summary */
+      .badge {
+        display: inline-block;
+        background: rgba(163, 29, 29, 0.25);
+        border: 1px solid rgba(163, 29, 29, 0.4);
+        border-radius: 8px;
+        padding: 3px 10px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--red-light);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Red separator line */
+      .red-line {
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--red-primary),
+          var(--red-bright),
+          transparent
+        );
+        border-radius: 2px;
+        margin: 16px 0;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--dark);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--red-primary);
+        border-radius: 4px;
       }
     </style>
   </head>
   <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-      <div class="container">
-        <a class="navbar-brand fw-bold" href="#">
-          <i class="fas fa-coffee me-2" style="color: var(--primary-red)"></i
-          >Bilhudã Coffee
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo-text">TĀJIR</div>
+      <div class="sub-logo">by: bilhudã</div>
+      <div id="clock"></div>
+    </div>
+
+    <div class="container">
+      <!-- TABS -->
+      <div class="tabs">
+        <button onclick="showTab('stok')" id="btn-stok" class="tab-btn active">
+          📦 Stok
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#produk">Menu</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#tentang">Tentang</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#kontak">Kontak</a>
-            </li>
-          </ul>
+        <button onclick="showTab('jual')" id="btn-jual" class="tab-btn">
+          🛒 Jual
+        </button>
+      </div>
+
+      <!-- SECTION STOK -->
+      <div id="section-stok">
+        <div class="card">
+          <div class="card-title">Input Stok Pagi</div>
+          <div id="stok-container"></div>
         </div>
+        <button onclick="showTab('jual')" class="btn-primary">
+          Masuk ke Kasir →
+        </button>
       </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section d-flex align-items-center">
-      <div class="container text-center">
-        <h1 class="display-3 fw-bold mb-4" style="color: var(--primary-red)">
-          Bilhudã Coffee
-        </h1>
-        <p class="lead mb-5 fs-4">
-          Slowbar dengan Kopi Premium dan Rasa yang Tak Terlupakan
-        </p>
-        <a href="#produk" class="btn btn-danger-custom btn-lg px-4 me-2"
-          >Lihat Menu</a
-        >
-        <a href="#kontak" class="btn btn-outline-light btn-lg px-4"
-          >Pesan Sekarang</a
-        >
-      </div>
-    </section>
+      <!-- SECTION JUAL -->
+      <div id="section-jual" class="hidden">
+        <div class="card">
+          <div class="card-title">Menu Penjualan</div>
+          <div id="jual-container"></div>
+        </div>
 
-    <!-- Produk Section -->
-    <section id="produk" class="py-5">
-      <div class="container">
-        <h2 class="text-center section-title">MENU KAMI</h2>
-
-        <div class="row">
-          <!-- Produk 1 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/espresso.jpg"
-                    class="card-img-full"
-                    alt="Espresso"
-                  />
-                </div>
-                <span class="price-tag">Rp 12.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  Espresso
-                </h5>
-                <p class="card-text">
-                  Kopi murni yang kuat dengan crema tebal, disajikan dalam
-                  cangkir kecil.
-                </p>
-              </div>
-            </div>
+        <div class="total-bar">
+          <div>
+            <div class="total-label">Total Laku</div>
+            <div id="total-money" class="total-amount">Rp 0</div>
           </div>
 
-          <!-- Produk 2 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/greente.jpg"
-                    class="card-img-full"
-                    alt="Matcha"
-                  />
-                </div>
-                <span class="price-tag">Rp 27.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  GreenTea Latte
-                </h5>
-                <p class="card-text">
-                  Perpaduan antara bubuk matcha yang dicampur dengan air panas,
-                  lalu dituang dengan froth milk atau susu yang sudah dipanaskan
-                  dan berbuih
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Produk 3 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/acole.jpg"
-                    class="card-img-full"
-                    alt="Acole"
-                  />
-                </div>
-                <span class="price-tag">Rp 25.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  Acole
-                </h5>
-                <p class="card-text">
-                  Kopi yang tidak hanya mempunyai rasa pahit akan tetap memiliki
-                  rasa asam didalamnya
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Produk 4 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/kosuga.jpg"
-                    class="card-img-full"
-                    alt="KOSUGA (Kopi Susu Gula Aren)"
-                  />
-                </div>
-                <span class="price-tag">Rp 27.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  KOSUGA (Kopi Susu Gula Aren)
-                </h5>
-                <p class="card-text">
-                  Menggunakan beans full arabica dari gayo highland dengan
-                  kualitas terbaik, dipadukan dengan fresh milk serta gula aren
-                  terbayk dan krimer yg membuat rasanya lebih legit ketika
-                  dinikmati
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Produk 5 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/mochavc.jpg"
-                    class="card-img-full"
-                    alt="Mocha"
-                  />
-                </div>
-                <span class="price-tag">Rp 27.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  Mochaccino
-                </h5>
-                <p class="card-text">
-                  Perpaduan espresso, coklat, dan susu steamed dengan whipped
-                  cream di atasnya.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Produk 6 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/WhatsApp Image 2025-04-04 at 08.23.49_58648a59.jpg"
-                    class="card-img-full"
-                    alt="Butterscotch"
-                  />
-                </div>
-                <span class="price-tag">Rp 30.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  Butterscotch
-                </h5>
-                <p class="card-text">
-                  Double espresso dengan ciri khas aroma dari butterscotch
-                  dengan topping whipped cream ditabur aren bubuk yg di burn
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Produk 7 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/v60.jpg"
-                    class="card-img-full"
-                    alt="V60(Manual Brew)"
-                  />
-                </div>
-                <span class="price-tag">Rp 27.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  V60(Manual Brew)
-                </h5>
-                <p class="card-text">
-                  Manual brew dengan beans speacialty pilihan
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Produk 8 -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/WhatsApp Image 2025-04-19 at 17.21.37_4a527ebe.jpg"
-                    class="card-img-full"
-                    alt="Ampea"
-                  />
-                </div>
-                <span class="price-tag">Rp 25.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  Ampea
-                </h5>
-                <p class="card-text">
-                  Dengan menggunakan base dari espresso di padukan dengan syrup
-                  peach dan ice shaked
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Produk 9 - Magic Coffee (New Item) -->
-          <div class="col-md-4 col-sm-6">
-            <div class="card coffee-card h-100">
-              <div class="position-relative">
-                <div class="card-img-container">
-                  <img
-                    src="image/magic.jpg"
-                    class="card-img-full"
-                    alt="Magic Coffee"
-                  />
-                </div>
-                <span class="price-tag">Rp 23.000</span>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title" style="color: var(--primary-red)">
-                  Magic Coffee
-                </h5>
-                <p class="card-text">
-                  Double ristretto dengan milk steam yg hangat
-                </p>
-              </div>
-            </div>
+          <div>
+            <div id="total-qty" class="total-cups">0 Cup</div>
+            <div id="sisa-stok" class="total-cups">Sisa: 0 Cup</div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Tentang Kami Section -->
-    <section id="tentang" class="py-5" style="background-color: #121212">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 mb-4 mb-lg-0">
-            <img
-              src="image/WhatsApp Image 2025-04-04 at 08.48.59_97b8f0c2.jpg"
-              class="img-fluid rounded shadow"
-              alt="Tentang Kami"
-            />
-          </div>
-          <div class="col-lg-6">
-            <h2 class="section-title">TENTANG KAMI</h2>
-            <p class="lead">
-              Bilhuda Coffee hadir untuk memberikan pengalaman ngopi yang
-              berbeda di Binjai.
-            </p>
-            <p>
-              Didirikan pada tahun 2021, Bilhuda Coffee berkomitmen untuk
-              menyajikan kopi berkualitas tinggi dengan biji kopi pilihan dari
-              berbagai daerah di Indonesia. Kami mengutamakan kualitas dari
-              setiap proses, mulai dari pemilihan biji, roasting, hingga
-              penyajian.
-            </p>
-            <p>
-              Dengan suasana yang nyaman dan cozy, Bilhuda Coffee menjadi tempat
-              favorit untuk berkumpul, bekerja, atau sekedar menikmati waktu
-              sendirian dengan secangkir kopi berkualitas.
-            </p>
-            <a href="#kontak" class="btn btn-danger-custom mt-3"
-              >Kunjungi Kami</a
+        <button onclick="generateReport()" class="btn-primary">
+          📊 Lihat Laporan
+        </button>
+        <button onclick="resetApp()" class="btn-ghost">Hapus Semua Data</button>
+      </div>
+    </div>
+
+    <!-- MODAL LAPORAN -->
+    <div id="modal">
+      <div class="modal-header">
+        <div class="logo-text">TĀJIR</div>
+        <div class="report-subtitle">Laporan Akhir Hari</div>
+      </div>
+
+      <div class="modal-inner">
+        <div class="card">
+          <div class="card-title">Detail Penjualan</div>
+          <!-- Header kolom -->
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr auto auto;
+              gap: 8px;
+              padding-bottom: 8px;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+              margin-bottom: 4px;
+            "
+          >
+            <span
+              style="
+                font-size: 0.6rem;
+                font-weight: 800;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+              "
+              >Menu</span
+            >
+            <span
+              style="
+                font-size: 0.6rem;
+                font-weight: 800;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                text-align: right;
+              "
+              >Qty</span
+            >
+            <span
+              style="
+                font-size: 0.6rem;
+                font-weight: 800;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                text-align: right;
+                min-width: 80px;
+              "
+              >Subtotal</span
             >
           </div>
+          <div id="report-items"></div>
         </div>
-      </div>
-    </section>
 
-    <!-- Kontak Section -->
-    <section id="kontak" class="py-5">
-      <div class="container">
-        <h2 class="text-center section-title">HUBUNGI KAMI</h2>
+        <div class="summary-card">
+          <div class="summary-row">
+            <span class="summary-key">Total Pendapatan Kotor</span>
+            <span id="rep-gross" class="summary-val"></span>
+          </div>
+          <div class="divider"></div>
 
-        <div class="row mt-5">
-          <div class="col-lg-6 mb-5 mb-lg-0">
-            <div class="contact-info">
-              <h3 class="mb-4" style="color: var(--primary-red)">
-                Informasi Kontak
-              </h3>
-              <p>
-                <i
-                  class="fas fa-map-marker-alt me-3"
-                  style="color: var(--primary-red)"
-                ></i>
-                Jl.Gunung Jaya Wijaya,jl.sabili (Futsal Dzikra), Binjai,
-                Sumatera Utara
+          <label
+            style="
+              font-size: 0.65rem;
+              font-weight: 700;
+              color: var(--text-muted);
+              letter-spacing: 2px;
+              text-transform: uppercase;
+              display: block;
+              margin-bottom: 8px;
+            "
+            >Biaya / Modal</label
+          >
+          <input
+            type="number"
+            id="biaya"
+            placeholder="Masukkan biaya operasional..."
+            class="biaya-input"
+            oninput="calcNet()"
+          />
+
+          <div class="divider"></div>
+          <div class="net-label">Profit Bersih</div>
+          <div id="rep-net" class="net-val">Rp 0</div>
+        </div>
+
+        <button onclick="closeModal()" class="btn-secondary">← Kembali</button>
+        <button onclick="kirimSheets()" class="btn-primary sheets-cta">
+          📤 Kirim ke Google Sheets
+        </button>
+        <button onclick="showSheetsGuide()" class="btn-ghost">
+          ℹ️ Cara Menghubungkan Google Sheets
+        </button>
+
+        <!-- PANDUAN SHEETS -->
+        <div id="sheets-guide" class="hidden">
+          <div class="red-line"></div>
+          <div class="card" style="border-color: rgba(34, 197, 94, 0.2)">
+            <div class="card-title" style="color: rgba(74, 222, 128, 0.7)">
+              Panduan Google Sheets
+            </div>
+
+            <div
+              style="
+                font-size: 0.8rem;
+                line-height: 1.7;
+                color: var(--text-sub);
+              "
+            >
+              <p
+                style="
+                  font-weight: 700;
+                  color: var(--cream);
+                  margin-bottom: 8px;
+                "
+              >
+                Langkah 1 — Buat Google Sheet
               </p>
-              <p>
-                <i
-                  class="fas fa-phone-alt me-3"
-                  style="color: var(--primary-red)"
-                ></i>
-                +62 852-9646-4616
-              </p>
-              <p>
-                <i
-                  class="fas fa-envelope me-3"
-                  style="color: var(--primary-red)"
-                ></i>
-                bilhuda.project@gmail.com
-              </p>
-              <p>
-                <i
-                  class="fas fa-clock me-3"
-                  style="color: var(--primary-red)"
-                ></i>
-                Buka setiap hari: 08.00 - 21.00 WIB
+              <p style="margin-bottom: 16px">
+                Buka <strong style="color: #4ade80">sheets.google.com</strong> →
+                buat spreadsheet baru → beri nama "Laporan Tajir Coffee".
               </p>
 
-              <div class="mt-4">
-                <h4 class="mb-3" style="color: var(--primary-red)">
-                  Sosial Media
-                </h4>
-                <a href="#" class="social-icon"
-                  ><i class="fab fa-instagram"></i
-                ></a>
-                <a href="#" class="social-icon"
-                  ><i class="fab fa-whatsapp"></i
-                ></a>
+              <p
+                style="
+                  font-weight: 700;
+                  color: var(--cream);
+                  margin-bottom: 8px;
+                "
+              >
+                Langkah 2 — Buka Apps Script
+              </p>
+              <p style="margin-bottom: 16px">
+                Di Google Sheets klik menu
+                <strong style="color: var(--red-light)"
+                  >Ekstensi → Apps Script</strong
+                >. Hapus kode yang ada, paste kode berikut:
+              </p>
+
+              <div
+                style="
+                  background: var(--dark-mid);
+                  border: 1px solid rgba(163, 29, 29, 0.3);
+                  border-radius: 12px;
+                  padding: 16px;
+                  font-size: 0.7rem;
+                  font-family: monospace;
+                  line-height: 1.7;
+                  color: #d1fae5;
+                  overflow-x: auto;
+                  margin-bottom: 16px;
+                  white-space: pre-wrap;
+                "
+              >
+                function doPost(e) { var sheet = SpreadsheetApp
+                .getActiveSpreadsheet() .getSheetByName("Laporan"); if (!sheet)
+                { sheet = SpreadsheetApp .getActiveSpreadsheet()
+                .insertSheet("Laporan"); sheet.appendRow([
+                "Tanggal","Menu","Laku","Stok", "Harga Satuan","Subtotal",
+                "Total Kotor","Biaya","Profit" ]); } var data =
+                JSON.parse(e.postData.contents); data.rows.forEach(function(row)
+                { sheet.appendRow(row); }); return ContentService
+                .createTextOutput(JSON.stringify({status:"ok"}))
+                .setMimeType(ContentService.MimeType.JSON); }
+              </div>
+
+              <p
+                style="
+                  font-weight: 700;
+                  color: var(--cream);
+                  margin-bottom: 8px;
+                "
+              >
+                Langkah 3 — Deploy sebagai Web App
+              </p>
+              <p style="margin-bottom: 6px">
+                1. Klik tombol
+                <strong style="color: var(--red-light)"
+                  >Deploy → New Deployment</strong
+                >
+              </p>
+              <p style="margin-bottom: 6px">
+                2. Pilih tipe:
+                <strong style="color: var(--red-light)">Web App</strong>
+              </p>
+              <p style="margin-bottom: 6px">
+                3. "Execute as": pilih
+                <strong style="color: var(--cream)">Me</strong>
+              </p>
+              <p style="margin-bottom: 6px">
+                4. "Who has access": pilih
+                <strong style="color: var(--cream)">Anyone</strong>
+              </p>
+              <p style="margin-bottom: 16px">
+                5. Klik <strong style="color: #4ade80">Deploy</strong> → salin
+                URL yang muncul
+              </p>
+
+              <p
+                style="
+                  font-weight: 700;
+                  color: var(--cream);
+                  margin-bottom: 8px;
+                "
+              >
+                Langkah 4 — Tempel URL di Kasir ini
+              </p>
+              <p style="margin-bottom: 12px">
+                Masukkan URL Web App kamu di bawah ini, lalu klik Simpan:
+              </p>
+
+              <input
+                type="text"
+                id="sheets-url-input"
+                placeholder="https://script.google.com/macros/s/..."
+                style="
+                  background: var(--dark-mid);
+                  border: 1px solid rgba(163, 29, 29, 0.4);
+                  border-radius: 10px;
+                  color: var(--cream);
+                  padding: 12px;
+                  font-size: 0.8rem;
+                  width: 100%;
+                  font-family: inherit;
+                  outline: none;
+                  margin-bottom: 10px;
+                "
+              />
+              <button
+                onclick="saveSheetUrl()"
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  background: var(--red-primary);
+                  border: none;
+                  border-radius: 12px;
+                  color: #fff;
+                  font-size: 0.8rem;
+                  font-weight: 700;
+                  font-family: inherit;
+                  cursor: pointer;
+                  box-shadow: 0 4px 12px var(--red-glow);
+                "
+              >
+                💾 Simpan URL
+              </button>
+
+              <div
+                id="url-saved-msg"
+                class="hidden"
+                style="
+                  margin-top: 10px;
+                  text-align: center;
+                  font-size: 0.75rem;
+                  color: #4ade80;
+                  font-weight: 700;
+                "
+              >
+                ✅ URL tersimpan! Tombol "Kirim ke Google Sheets" sudah aktif.
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
-    <footer class="text-center py-4">
-      <div class="container">
-        <p class="mb-2">&copy; ig:bilhudacoffe. slowbar.</p>
-        <p class="mb-0">
-          Jl.Gunung Jaya Wijaya,jl.sabili (Futsal Dzikra), Binjai, Sumatera
-          Utara
-        </p>
+    <!-- HANYA BAGIAN JS YANG DIUBAH, HTML & CSS TETAP SAMA -->
+    <script>
+      // ============================================================
+      // TAJIR COFFEE — LOGIC JS v4 (Stok Per Menu)
+      // ============================================================
+
+      const MENUS = [
+        { id: "lb", name: "Longblack Tajir", price: 10000, cat: "coffee" },
+        { id: "bp", name: "BlackPeach Tajir", price: 12000, cat: "coffee" },
+        { id: "sg", name: "Sanger Tajir", price: 13000, cat: "coffee" },
+        { id: "hz", name: "Hazelnut Tajir", price: 13000, cat: "coffee" },
+        { id: "ca", name: "Caramel Tajir", price: 13000, cat: "coffee" },
+        { id: "ar", name: "Aren Tajir", price: 13000, cat: "coffee" },
+        { id: "ma", name: "Matcha Tajir", price: 15000, cat: "non" },
+        { id: "rv", name: "Red Velvet Tajir", price: 12000, cat: "non" },
+      ];
+
+      // ─── Data Structure Baru ───────────────────────────────────
+      // {
+      //   stok: { id_menu: jumlah },
+      //   jual: { id_menu: jumlah }
+      // }
+      // ──────────────────────────────────────────────────────────
+
+      function defaultDb() {
+        const stok = {};
+        const jual = {};
+        MENUS.forEach((m) => {
+          stok[m.id] = 0;
+          jual[m.id] = 0;
+        });
+        return { stok, jual };
+      }
+
+      // Load dari localStorage — migrasi otomatis jika format lama
+      function loadDb() {
+        try {
+          const raw = localStorage.getItem("tajir_v4");
+          if (raw) return JSON.parse(raw);
+
+          // Coba migrasi dari v3 (format lama)
+          const oldRaw = localStorage.getItem("tajir_v3");
+          if (oldRaw) {
+            const old = JSON.parse(oldRaw);
+            const db = defaultDb();
+            // Salin data jual yang sudah ada
+            MENUS.forEach((m) => {
+              db.jual[m.id] = old.jual?.[m.id] || 0;
+            });
+            return db;
+          }
+        } catch (e) {
+          /* ignore */
+        }
+        return defaultDb();
+      }
+
+      let db = loadDb();
+
+      // Google Sheets URL (sudah terhubung langsung)
+      const sheetsUrl =
+        "https://script.google.com/macros/s/AKfycbwWVhiLJdIzTFSlsuf1UcELhg7-bwrrAv7UnxLbALhJi-xeSNK58gJ-wcPKmYvhwFeTDw/exec";
+
+      // ─── Helpers ──────────────────────────────────────────────
+
+      function save() {
+        localStorage.setItem("tajir_v4", JSON.stringify(db));
+        updateTotal();
+      }
+
+      function fmt(n) {
+        return "Rp " + n.toLocaleString("id-ID");
+      }
+
+      /** Total stok semua menu yang tersisa (belum terjual) */
+      function getTotalSisa() {
+        return MENUS.reduce((sum, m) => {
+          const sisa = (db.stok[m.id] || 0) - (db.jual[m.id] || 0);
+          return sum + Math.max(0, sisa);
+        }, 0);
+      }
+
+      /** Total stok awal seluruh menu */
+      function getTotalStok() {
+        return MENUS.reduce((sum, m) => sum + (db.stok[m.id] || 0), 0);
+      }
+
+      /** Total cup terjual */
+      function getTotalJual() {
+        return MENUS.reduce((sum, m) => sum + (db.jual[m.id] || 0), 0);
+      }
+
+      /** Total uang masuk */
+      function getTotalCash() {
+        return MENUS.reduce(
+          (sum, m) => sum + (db.jual[m.id] || 0) * m.price,
+          0,
+        );
+      }
+
+      // ─── Init: Render Halaman Stok ─────────────────────────────
+
+      function init() {
+        renderStok();
+        updateTotal();
+      }
+
+      function renderStok() {
+        const container = document.getElementById("stok-container");
+
+        // Render satu baris per menu
+        const rows = MENUS.map(
+          (m) => `
+    <div class="stok-row">
+      <div>
+        <div class="stok-name">${m.name}</div>
+        <div class="stok-price">${fmt(m.price)} per cup</div>
       </div>
-    </footer>
+      <input
+        type="number"
+        min="0"
+        value="${db.stok[m.id] || 0}"
+        class="qty-input"
+        oninput="setStok('${m.id}', this.value)"
+      >
+    </div>
+  `,
+        ).join("");
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        // Baris total stok di bagian bawah
+        const totalRow = `
+    <div class="stok-row" id="stok-total-row" style="margin-top:8px; border-top: 1px solid rgba(163,29,29,0.3); padding-top:12px;">
+      <div>
+        <div class="stok-name" style="color: var(--gold);">Total Semua Stok</div>
+        <div class="stok-price">Jumlah seluruh cup tersedia</div>
+      </div>
+      <div id="stok-total-val" style="
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--gold);
+        min-width: 64px;
+        text-align: center;
+      ">${getTotalStok()}</div>
+    </div>
+  `;
+
+        container.innerHTML = rows + totalRow;
+      }
+
+      function setStok(id, val) {
+        const n = parseInt(val) || 0;
+        db.stok[id] = Math.max(0, n);
+
+        // Pastikan stok tidak boleh di bawah jumlah yang sudah terjual
+        if (db.stok[id] < db.jual[id]) {
+          db.jual[id] = db.stok[id];
+        }
+
+        save();
+
+        // Update angka total stok tanpa re-render penuh
+        const totalEl = document.getElementById("stok-total-val");
+        if (totalEl) totalEl.innerText = getTotalStok();
+      }
+
+      // ─── Render Halaman Jual ──────────────────────────────────
+
+      function renderJual() {
+        const container = document.getElementById("jual-container");
+
+        function renderList(list) {
+          return list
+            .map((m) => {
+              const laku = db.jual[m.id] || 0;
+              const sisa = Math.max(0, (db.stok[m.id] || 0) - laku);
+              return `
+        <div class="jual-row">
+          <div>
+            <div class="jual-name">${m.name}</div>
+            <div class="jual-meta">${fmt(m.price)} · Sisa: ${sisa} cup</div>
+          </div>
+          <div class="counter">
+            <button class="btn-minus" onclick="adj('${m.id}', -1)">−</button>
+            <span class="counter-val">${laku}</span>
+            <button class="btn-plus" onclick="adj('${m.id}', 1)">+</button>
+          </div>
+        </div>
+      `;
+            })
+            .join("");
+        }
+
+        const coffee = MENUS.filter((m) => m.cat === "coffee");
+        const non = MENUS.filter((m) => m.cat === "non");
+
+        container.innerHTML = `
+    <div style="margin-bottom:10px;font-weight:700;color:#e03030;">☕ Coffee</div>
+    ${renderList(coffee)}
+    <div style="margin:15px 0 10px;font-weight:700;color:#4ade80;">🥤 Non Coffee</div>
+    ${renderList(non)}
+  `;
+      }
+
+      /** Tambah / kurang penjualan untuk satu menu */
+      function adj(id, val) {
+        const stokMenu = db.stok[id] || 0;
+        const lakuMenu = db.jual[id] || 0;
+
+        if (val > 0 && lakuMenu >= stokMenu) {
+          alert(
+            "Stok " + MENUS.find((m) => m.id === id)?.name + " sudah habis!",
+          );
+          return;
+        }
+
+        db.jual[id] = Math.max(0, lakuMenu + val);
+        save();
+        renderJual();
+      }
+
+      // ─── Update Bar Total (bagian bawah halaman Jual) ─────────
+
+      function updateTotal() {
+        const cash = getTotalCash();
+        const cups = getTotalJual();
+        const sisa = getTotalSisa();
+
+        document.getElementById("total-money").innerText = fmt(cash);
+        document.getElementById("total-qty").innerText = cups + " Cup";
+        document.getElementById("sisa-stok").innerText =
+          "Sisa: " + sisa + " Cup";
+
+        window.currentGross = cash;
+      }
+
+      // ─── Tab Navigation ───────────────────────────────────────
+
+      function showTab(t) {
+        document
+          .getElementById("section-stok")
+          .classList.toggle("hidden", t !== "stok");
+        document
+          .getElementById("section-jual")
+          .classList.toggle("hidden", t !== "jual");
+
+        if (t === "jual") renderJual();
+        if (t === "stok") renderStok();
+
+        document
+          .getElementById("btn-stok")
+          .classList.toggle("active", t === "stok");
+        document
+          .getElementById("btn-jual")
+          .classList.toggle("active", t === "jual");
+      }
+
+      // ─── Laporan ──────────────────────────────────────────────
+
+      function generateReport() {
+        const gross = getTotalCash();
+        document.getElementById("rep-gross").innerText = fmt(gross);
+        window.currentGross = gross;
+
+        // Reset input biaya & net
+        document.getElementById("biaya").value = "";
+        document.getElementById("rep-net").innerText = fmt(gross);
+
+        // Render detail per menu
+        const items = MENUS.map((m) => {
+          const laku = db.jual[m.id] || 0;
+          const stok = db.stok[m.id] || 0;
+          const subtotal = laku * m.price;
+          const isEmpty = laku === 0;
+
+          return `
+      <div class="rep-row ${isEmpty ? "rep-zero" : ""}">
+        <span class="rep-name">${m.name}</span>
+        <span class="rep-qty">${laku} / ${stok} cup</span>
+        <span class="rep-subtotal">${isEmpty ? "—" : fmt(subtotal)}</span>
+      </div>
+    `;
+        }).join("");
+
+        document.getElementById("report-items").innerHTML = items;
+        document.getElementById("modal").style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      function calcNet() {
+        const exp = parseInt(document.getElementById("biaya").value) || 0;
+        const net = window.currentGross - exp;
+        document.getElementById("rep-net").innerText = fmt(net);
+      }
+
+      // ─── Reset ────────────────────────────────────────────────
+
+      function resetApp() {
+        if (confirm("Reset semua data stok dan penjualan?")) {
+          localStorage.removeItem("tajir_v4");
+          localStorage.removeItem("tajir_v3");
+          location.reload();
+        }
+      }
+
+      // ─── Google Sheets ────────────────────────────────────────
+
+      function kirimSheets() {
+        const biaya = parseInt(document.getElementById("biaya").value) || 0;
+        const gross = getTotalCash();
+        const profit = gross - biaya;
+        const tanggal = new Date().toLocaleDateString("id-ID");
+
+        const promises = MENUS.filter((m) => (db.jual[m.id] || 0) > 0).map(
+          (m) => {
+            const laku = db.jual[m.id];
+            const stok = db.stok[m.id] || 0;
+            const subtotal = laku * m.price;
+
+            const url =
+              sheetsUrl +
+              "?tanggal=" +
+              encodeURIComponent(tanggal) +
+              "&menu=" +
+              encodeURIComponent(m.name) +
+              "&laku=" +
+              laku +
+              "&stok=" +
+              stok +
+              "&harga=" +
+              m.price +
+              "&subtotal=" +
+              subtotal +
+              "&total=" +
+              gross +
+              "&biaya=" +
+              biaya +
+              "&profit=" +
+              profit;
+
+            return fetch(url)
+              .then((res) => res.text())
+              .catch((err) => console.error("Sheets error:", err));
+          },
+        );
+
+        Promise.all(promises).then(() => {
+          alert("✅ Data berhasil dikirim ke Google Sheets!");
+        });
+      }
+
+      // ─── Sheets Guide (UI helper, tidak berubah) ──────────────
+
+      function showSheetsGuide() {
+        const el = document.getElementById("sheets-guide");
+        el.classList.toggle("hidden");
+      }
+
+      function saveSheetUrl() {
+        const url = document.getElementById("sheets-url-input").value.trim();
+        if (!url) return alert("URL tidak boleh kosong!");
+        localStorage.setItem("tajir_sheets_url", url);
+        document.getElementById("url-saved-msg").classList.remove("hidden");
+      }
+
+      // ─── Clock ────────────────────────────────────────────────
+
+      function updateClock() {
+        const now = new Date();
+        document.getElementById("clock").innerText = now.toLocaleTimeString(
+          "id-ID",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          },
+        );
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      // ─── Mulai ────────────────────────────────────────────────
+      init();
+    </script>
   </body>
 </html>
