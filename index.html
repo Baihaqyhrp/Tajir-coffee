@@ -5,24 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tajir Coffee — Sistem Kasir</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --red-deep: #8b0000;
-        --red-primary: #a31d1d;
+        --red-deep: #6b0000;
+        --red-primary: #9b1a1a;
         --red-bright: #c0272d;
-        --red-light: #e03030;
-        --red-glow: rgba(163, 29, 29, 0.45);
+        --red-light: #e04040;
+        --red-glow: rgba(155, 26, 26, 0.4);
+        --red-subtle: rgba(192, 39, 45, 0.1);
         --cream: #fff8f0;
         --off-white: #f2e8e0;
-        --dark: #0d0404;
-        --dark-card: #1a0808;
-        --dark-mid: #250c0c;
+        --dark: #0a0303;
+        --dark-card: #130606;
+        --dark-mid: #1e0a0a;
+        --dark-hover: #261010;
         --gold: #d4a017;
-        --text-muted: rgba(255, 248, 240, 0.45);
-        --text-sub: rgba(255, 248, 240, 0.7);
+        --green: #4ade80;
+        --text-muted: rgba(255, 248, 240, 0.38);
+        --text-sub: rgba(255, 248, 240, 0.62);
+        --border: rgba(255, 255, 255, 0.055);
+        --border-red: rgba(155, 26, 26, 0.35);
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 22px;
+        --radius-xl: 32px;
       }
 
       *,
@@ -39,93 +48,106 @@
         font-family: "Plus Jakarta Sans", sans-serif;
         min-height: 100vh;
         overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
       }
 
-      /* Noise texture overlay */
+      /* Noise texture */
       body::before {
         content: "";
         position: fixed;
         inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
         pointer-events: none;
         z-index: 0;
-        opacity: 0.5;
       }
 
       /* ===== HEADER ===== */
       .header {
         position: relative;
         background: linear-gradient(
-          160deg,
+          155deg,
           var(--red-deep) 0%,
-          var(--red-primary) 45%,
-          var(--red-bright) 100%
+          var(--red-primary) 50%,
+          #b82020 100%
         );
-        padding: 48px 24px 60px;
+        padding: 44px 24px 56px;
         text-align: center;
-        border-radius: 0 0 40px 40px;
+        border-radius: 0 0 36px 36px;
         box-shadow:
-          0 8px 0 var(--red-deep),
-          0 16px 40px rgba(0, 0, 0, 0.6),
-          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          0 6px 0 #4a0000,
+          0 18px 48px rgba(0, 0, 0, 0.7),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.2);
         overflow: hidden;
         z-index: 1;
       }
 
-      /* Decorative circles in header */
       .header::before {
         content: "";
         position: absolute;
-        width: 260px;
-        height: 260px;
+        width: 280px;
+        height: 280px;
         border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        top: -80px;
-        right: -60px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        top: -90px;
+        right: -70px;
       }
       .header::after {
         content: "";
         position: absolute;
-        width: 160px;
-        height: 160px;
+        width: 180px;
+        height: 180px;
         border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        bottom: -40px;
-        left: -30px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        bottom: -50px;
+        left: -40px;
+      }
+
+      /* Extra decorative dot */
+      .header-deco {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        top: 28px;
+        right: 28px;
+        z-index: 1;
       }
 
       .logo-text {
         font-family: "Fredoka", sans-serif;
-        font-size: 4rem;
+        font-size: 3.8rem;
         font-weight: 700;
         color: #fff;
-        letter-spacing: -2px;
+        letter-spacing: -1.5px;
         line-height: 1;
         text-shadow:
-          0 2px 0 rgba(0, 0, 0, 0.3),
-          0 0 30px rgba(255, 255, 255, 0.15);
+          0 2px 0 rgba(0, 0, 0, 0.35),
+          0 0 40px rgba(255, 255, 255, 0.12);
         position: relative;
         z-index: 1;
       }
 
       .sub-logo {
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 0.65rem;
-        font-weight: 700;
-        letter-spacing: 3px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 3.5px;
         text-transform: uppercase;
-        opacity: 0.7;
-        margin-top: 2px;
+        opacity: 0.55;
+        margin-top: 4px;
         position: relative;
         z-index: 1;
       }
 
       #clock {
-        font-size: 0.6rem;
+        font-size: 0.55rem;
         letter-spacing: 4px;
-        opacity: 0.5;
-        margin-top: 16px;
+        opacity: 0.42;
+        margin-top: 14px;
         text-transform: uppercase;
+        font-weight: 600;
         position: relative;
         z-index: 1;
       }
@@ -134,7 +156,7 @@
       .container {
         max-width: 460px;
         margin: 0 auto;
-        padding: 24px 16px 40px;
+        padding: 22px 15px 48px;
         position: relative;
         z-index: 1;
       }
@@ -143,62 +165,71 @@
       .tabs {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-bottom: 24px;
+        gap: 6px;
+        margin-bottom: 20px;
         background: var(--dark-card);
-        border-radius: 16px;
-        padding: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-md);
+        padding: 5px;
+        border: 1px solid var(--border);
       }
 
       .tab-btn {
-        padding: 12px;
-        font-size: 0.75rem;
+        padding: 11px;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 12px;
+        letter-spacing: 1.2px;
+        border-radius: var(--radius-sm);
         color: var(--text-muted);
         border: none;
         background: transparent;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.2s ease;
         font-family: inherit;
       }
 
       .tab-btn.active {
-        background: var(--red-primary);
+        background: linear-gradient(
+          135deg,
+          var(--red-primary),
+          var(--red-bright)
+        );
         color: #fff;
-        box-shadow: 0 4px 16px var(--red-glow);
+        box-shadow: 0 3px 14px var(--red-glow);
+      }
+
+      .tab-btn:not(.active):hover {
+        color: var(--text-sub);
+        background: rgba(255, 255, 255, 0.03);
       }
 
       /* ===== CARDS ===== */
       .card {
         background: var(--dark-card);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 20px;
-        padding: 20px;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 18px 18px 10px;
+        margin-bottom: 14px;
+        box-shadow: 0 4px 28px rgba(0, 0, 0, 0.45);
       }
 
       .card-title {
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         font-weight: 800;
         letter-spacing: 3px;
         text-transform: uppercase;
         color: var(--text-muted);
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
       }
 
       .card-title::after {
         content: "";
         flex: 1;
         height: 1px;
-        background: linear-gradient(90deg, rgba(163, 29, 29, 0.5), transparent);
+        background: linear-gradient(90deg, var(--border-red), transparent);
       }
 
       /* ===== STOK ROWS ===== */
@@ -206,38 +237,47 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 9px 0;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
       }
       .stok-row:last-child {
         border-bottom: none;
+        padding-bottom: 6px;
+      }
+      .stok-row:first-child {
+        padding-top: 0;
       }
 
       .stok-name {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 600;
         color: var(--cream);
+        line-height: 1.3;
       }
 
       .stok-price {
-        font-size: 0.65rem;
+        font-size: 0.62rem;
         color: var(--text-muted);
         margin-top: 2px;
+        font-weight: 500;
       }
 
       .qty-input {
         background: var(--dark-mid);
-        border: 1px solid rgba(163, 29, 29, 0.4);
-        border-radius: 10px;
+        border: 1px solid var(--border-red);
+        border-radius: var(--radius-sm);
         color: var(--cream);
         text-align: center;
-        width: 64px;
-        padding: 8px 4px;
-        font-size: 0.9rem;
+        width: 60px;
+        padding: 7px 4px;
+        font-size: 0.88rem;
         font-weight: 700;
         font-family: inherit;
         outline: none;
-        transition: border-color 0.2s;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s;
       }
 
       .qty-input:focus {
@@ -250,133 +290,159 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 11px 0;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
       }
       .jual-row:last-child {
         border-bottom: none;
+        padding-bottom: 4px;
+      }
+      .jual-row:first-child {
+        padding-top: 0;
       }
 
       .jual-name {
-        font-size: 0.85rem;
+        font-size: 0.83rem;
         font-weight: 700;
         color: var(--cream);
+        line-height: 1.3;
       }
 
       .jual-meta {
-        font-size: 0.62rem;
+        font-size: 0.6rem;
         color: var(--text-muted);
         margin-top: 3px;
+        font-weight: 500;
       }
 
       .counter {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
+        flex-shrink: 0;
       }
 
       .counter-val {
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         font-weight: 800;
-        min-width: 24px;
+        min-width: 22px;
         text-align: center;
         color: var(--cream);
+        font-variant-numeric: tabular-nums;
       }
 
       .btn-minus,
       .btn-plus {
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         border: none;
         cursor: pointer;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         font-weight: 700;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.15s;
+        transition: all 0.15s ease;
         font-family: inherit;
+        line-height: 1;
+        flex-shrink: 0;
       }
 
       .btn-minus {
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.05);
         color: var(--text-sub);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+      }
+      .btn-minus:hover {
+        background: rgba(255, 255, 255, 0.09);
       }
 
       .btn-plus {
-        background: var(--red-primary);
+        background: linear-gradient(
+          135deg,
+          var(--red-primary),
+          var(--red-bright)
+        );
         color: #fff;
-        box-shadow: 0 3px 12px var(--red-glow);
+        box-shadow: 0 2px 10px var(--red-glow);
+      }
+      .btn-plus:hover {
+        box-shadow: 0 3px 16px var(--red-glow);
+        transform: scale(1.05);
       }
 
-      .btn-minus:active {
-        transform: scale(0.9);
-      }
+      .btn-minus:active,
       .btn-plus:active {
-        transform: scale(0.9);
+        transform: scale(0.88);
       }
 
       /* ===== TOTAL BAR ===== */
       .total-bar {
-        background: linear-gradient(135deg, var(--dark-card), var(--dark-mid));
-        border: 1px solid rgba(163, 29, 29, 0.3);
-        border-radius: 20px;
-        padding: 20px 24px;
+        background: var(--dark-card);
+        border: 1px solid var(--border-red);
+        border-radius: var(--radius-lg);
+        padding: 18px 22px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
         box-shadow:
-          0 4px 20px rgba(0, 0, 0, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          0 4px 24px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04),
+          inset 0 0 0 1px rgba(155, 26, 26, 0.08);
       }
 
       .total-label {
-        font-size: 0.6rem;
+        font-size: 0.55rem;
         font-weight: 800;
         letter-spacing: 3px;
         text-transform: uppercase;
         color: var(--text-muted);
-        margin-bottom: 6px;
+        margin-bottom: 5px;
       }
 
       .total-amount {
-        font-size: 2rem;
+        font-size: 1.85rem;
         font-weight: 800;
         color: #fff;
         line-height: 1;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.5px;
       }
 
       .total-cups {
-        font-size: 1.1rem;
+        font-size: 0.82rem;
         font-weight: 700;
         color: var(--text-sub);
+        text-align: right;
+        line-height: 1.7;
       }
 
       /* ===== BUTTONS ===== */
       .btn-primary {
         width: 100%;
-        padding: 16px;
+        padding: 15px;
         border: none;
-        border-radius: 16px;
+        border-radius: var(--radius-md);
         background: linear-gradient(
           135deg,
           var(--red-bright),
           var(--red-primary)
         );
         color: #fff;
-        font-size: 0.9rem;
+        font-size: 0.82rem;
         font-weight: 800;
-        letter-spacing: 1px;
+        letter-spacing: 1.2px;
         text-transform: uppercase;
         cursor: pointer;
         font-family: inherit;
         box-shadow:
-          0 6px 24px var(--red-glow),
-          0 2px 0 var(--red-deep);
-        transition: all 0.2s;
+          0 5px 22px var(--red-glow),
+          0 2px 0 var(--red-deep),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        transition: all 0.2s ease;
         position: relative;
         overflow: hidden;
         margin-bottom: 10px;
@@ -392,27 +458,31 @@
         background: linear-gradient(
           90deg,
           transparent,
-          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.1),
           transparent
         );
-        transition: left 0.4s;
+        transition: left 0.45s ease;
       }
-
       .btn-primary:hover::before {
         left: 100%;
       }
+      .btn-primary:hover {
+        box-shadow:
+          0 7px 28px var(--red-glow),
+          0 2px 0 var(--red-deep);
+      }
       .btn-primary:active {
         transform: translateY(1px);
-        box-shadow: 0 3px 12px var(--red-glow);
+        box-shadow: 0 2px 10px var(--red-glow);
       }
 
       .btn-ghost {
         width: 100%;
-        padding: 10px;
+        padding: 9px;
         background: transparent;
         border: none;
         color: var(--text-muted);
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         font-weight: 700;
         letter-spacing: 3px;
         text-transform: uppercase;
@@ -420,12 +490,11 @@
         font-family: inherit;
         transition: color 0.2s;
       }
-
       .btn-ghost:hover {
         color: var(--red-light);
       }
 
-      /* ===== MODAL / LAPORAN ===== */
+      /* ===== MODAL ===== */
       #modal {
         position: fixed;
         inset: 0;
@@ -433,12 +502,12 @@
         z-index: 100;
         overflow-y: auto;
         display: none;
-        animation: slideUp 0.3s ease;
+        animation: slideUp 0.28s ease;
       }
 
       @keyframes slideUp {
         from {
-          transform: translateY(30px);
+          transform: translateY(24px);
           opacity: 0;
         }
         to {
@@ -449,17 +518,18 @@
 
       .modal-header {
         background: linear-gradient(
-          160deg,
+          155deg,
           var(--red-deep),
           var(--red-primary)
         );
-        padding: 40px 24px 50px;
+        padding: 38px 24px 48px;
         text-align: center;
-        border-radius: 0 0 40px 40px;
+        border-radius: 0 0 36px 36px;
         box-shadow:
-          0 8px 0 var(--red-deep),
-          0 16px 40px rgba(0, 0, 0, 0.5);
-        margin-bottom: 24px;
+          0 6px 0 #4a0000,
+          0 18px 40px rgba(0, 0, 0, 0.55),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
         position: relative;
         overflow: hidden;
       }
@@ -467,44 +537,46 @@
       .modal-header::before {
         content: "";
         position: absolute;
-        width: 200px;
-        height: 200px;
+        width: 220px;
+        height: 220px;
         border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        top: -60px;
-        right: -40px;
+        border: 1px solid rgba(255, 255, 255, 0.065);
+        top: -65px;
+        right: -45px;
       }
 
       .report-subtitle {
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         letter-spacing: 5px;
         text-transform: uppercase;
-        opacity: 0.5;
-        margin-top: 4px;
+        opacity: 0.48;
+        margin-top: 5px;
+        font-weight: 600;
       }
 
       .modal-inner {
         max-width: 460px;
         margin: 0 auto;
-        padding: 0 16px 40px;
+        padding: 0 15px 48px;
       }
 
-      /* Report item rows */
+      /* Report rows */
       .rep-row {
         display: grid;
         grid-template-columns: 1fr auto auto;
         gap: 8px;
         align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.12s;
       }
-
       .rep-row:last-child {
         border-bottom: none;
+        padding-bottom: 2px;
       }
 
       .rep-name {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 600;
         color: var(--cream);
       }
@@ -516,30 +588,30 @@
         white-space: nowrap;
       }
       .rep-subtotal {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 800;
         color: var(--red-light);
         text-align: right;
         white-space: nowrap;
-        min-width: 80px;
+        min-width: 82px;
       }
 
       .rep-zero .rep-name {
-        opacity: 0.35;
+        opacity: 0.32;
       }
       .rep-zero .rep-qty {
-        opacity: 0.25;
+        opacity: 0.22;
       }
       .rep-zero .rep-subtotal {
-        opacity: 0.2;
+        opacity: 0.18;
       }
 
       .summary-card {
         background: var(--dark-card);
-        border: 1px solid rgba(163, 29, 29, 0.3);
-        border-radius: 20px;
-        padding: 20px;
-        margin: 16px 0;
+        border: 1px solid var(--border-red);
+        border-radius: var(--radius-lg);
+        padding: 18px 18px 20px;
+        margin: 14px 0;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
       }
 
@@ -547,17 +619,17 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 8px 0;
+        padding: 7px 0;
       }
 
       .summary-key {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         color: var(--text-muted);
         font-weight: 600;
       }
 
       .summary-val {
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 800;
         color: var(--cream);
       }
@@ -567,124 +639,155 @@
         background: linear-gradient(
           90deg,
           transparent,
-          rgba(163, 29, 29, 0.5),
+          var(--border-red),
           transparent
         );
         margin: 12px 0;
       }
 
       .net-label {
-        font-size: 0.65rem;
-        letter-spacing: 2px;
+        font-size: 0.6rem;
+        letter-spacing: 2.5px;
         text-transform: uppercase;
         color: var(--text-muted);
-        margin-bottom: 4px;
+        margin-bottom: 5px;
+        font-weight: 700;
       }
       .net-val {
-        font-size: 1.6rem;
+        font-size: 1.55rem;
         font-weight: 800;
-        color: #4ade80;
+        color: var(--green);
+        letter-spacing: -0.5px;
+        font-variant-numeric: tabular-nums;
       }
 
       .biaya-input {
         background: var(--dark-mid);
-        border: 1px solid rgba(163, 29, 29, 0.3);
-        border-radius: 12px;
+        border: 1px solid var(--border-red);
+        border-radius: var(--radius-sm);
         color: var(--cream);
-        padding: 12px 16px;
-        font-size: 0.85rem;
+        padding: 11px 14px;
+        font-size: 0.83rem;
         font-weight: 600;
         font-family: inherit;
         width: 100%;
         outline: none;
-        transition: border-color 0.2s;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s;
         margin-bottom: 4px;
       }
-
       .biaya-input:focus {
         border-color: var(--red-primary);
         box-shadow: 0 0 0 2px var(--red-glow);
       }
-
       .biaya-input::placeholder {
         color: var(--text-muted);
       }
 
+      /* Column header */
+      .rep-col-header {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 8px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 2px;
+      }
+      .rep-col-label {
+        font-size: 0.56rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .rep-col-label:not(:first-child) {
+        text-align: right;
+      }
+      .rep-col-label:last-child {
+        min-width: 82px;
+      }
+
       .btn-secondary {
         width: 100%;
-        padding: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 14px;
+        padding: 13px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-md);
         background: transparent;
         color: var(--cream);
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 700;
         cursor: pointer;
         font-family: inherit;
         margin-bottom: 10px;
         transition: all 0.2s;
       }
-
       .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.18);
       }
 
-      /* Sheets CTA */
       .sheets-cta {
-        background: linear-gradient(135deg, #1a5c2a, #16a34a);
-        color: #fff;
-        font-weight: 800;
-        box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+        background: linear-gradient(135deg, #166534, #16a34a) !important;
+        box-shadow:
+          0 5px 22px rgba(22, 163, 74, 0.35),
+          0 2px 0 #0f4621 !important;
       }
-
-      /* Badge for total cups summary */
-      .badge {
-        display: inline-block;
-        background: rgba(163, 29, 29, 0.25);
-        border: 1px solid rgba(163, 29, 29, 0.4);
-        border-radius: 8px;
-        padding: 3px 10px;
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: var(--red-light);
-        text-transform: uppercase;
-        letter-spacing: 1px;
+      .sheets-cta:hover {
+        box-shadow:
+          0 7px 28px rgba(22, 163, 74, 0.45),
+          0 2px 0 #0f4621 !important;
       }
 
       .hidden {
         display: none !important;
       }
 
-      /* Red separator line */
-      .red-line {
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          var(--red-primary),
-          var(--red-bright),
-          transparent
-        );
-        border-radius: 2px;
-        margin: 16px 0;
-      }
-
-      /* Scrollbar */
       ::-webkit-scrollbar {
-        width: 4px;
+        width: 3px;
       }
       ::-webkit-scrollbar-track {
         background: var(--dark);
       }
       ::-webkit-scrollbar-thumb {
         background: var(--red-primary);
-        border-radius: 4px;
+        border-radius: 3px;
+      }
+
+      /* Subtle separator in sections */
+      .section-sep {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--red-primary),
+          var(--red-bright),
+          transparent
+        );
+        border-radius: 1px;
+        margin: 12px 0;
+        opacity: 0.55;
+      }
+
+      /* Category pill */
+      .cat-pill {
+        display: inline-block;
+        font-size: 0.52rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 2px 7px;
+        margin: 6px 0 10px;
       }
     </style>
   </head>
   <body>
     <!-- HEADER -->
     <div class="header">
+      <div class="header-deco"></div>
       <div class="logo-text">TĀJIR</div>
       <div class="sub-logo">by: bilhudã</div>
       <div id="clock"></div>
@@ -724,7 +827,6 @@
             <div class="total-label">Total Laku</div>
             <div id="total-money" class="total-amount">Rp 0</div>
           </div>
-
           <div>
             <div id="total-qty" class="total-cups">0 Cup</div>
             <div id="sisa-stok" class="total-cups">Sisa: 0 Cup</div>
@@ -748,50 +850,10 @@
       <div class="modal-inner">
         <div class="card">
           <div class="card-title">Detail Penjualan</div>
-          <!-- Header kolom -->
-          <div
-            style="
-              display: grid;
-              grid-template-columns: 1fr auto auto;
-              gap: 8px;
-              padding-bottom: 8px;
-              border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-              margin-bottom: 4px;
-            "
-          >
-            <span
-              style="
-                font-size: 0.6rem;
-                font-weight: 800;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-              "
-              >Menu</span
-            >
-            <span
-              style="
-                font-size: 0.6rem;
-                font-weight: 800;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-                text-align: right;
-              "
-              >Qty</span
-            >
-            <span
-              style="
-                font-size: 0.6rem;
-                font-weight: 800;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-                text-align: right;
-                min-width: 80px;
-              "
-              >Subtotal</span
-            >
+          <div class="rep-col-header">
+            <span class="rep-col-label">Menu</span>
+            <span class="rep-col-label">Qty</span>
+            <span class="rep-col-label" style="min-width: 82px">Subtotal</span>
           </div>
           <div id="report-items"></div>
         </div>
@@ -805,7 +867,7 @@
 
           <label
             style="
-              font-size: 0.65rem;
+              font-size: 0.62rem;
               font-weight: 700;
               color: var(--text-muted);
               letter-spacing: 2px;
@@ -813,8 +875,9 @@
               display: block;
               margin-bottom: 8px;
             "
-            >Biaya / Modal</label
           >
+            Biaya / Modal
+          </label>
           <input
             type="number"
             id="biaya"
@@ -832,186 +895,12 @@
         <button onclick="kirimSheets()" class="btn-primary sheets-cta">
           📤 Kirim ke Google Sheets
         </button>
-        <button onclick="showSheetsGuide()" class="btn-ghost">
-          ℹ️ Cara Menghubungkan Google Sheets
-        </button>
-
-        <!-- PANDUAN SHEETS -->
-        <div id="sheets-guide" class="hidden">
-          <div class="red-line"></div>
-          <div class="card" style="border-color: rgba(34, 197, 94, 0.2)">
-            <div class="card-title" style="color: rgba(74, 222, 128, 0.7)">
-              Panduan Google Sheets
-            </div>
-
-            <div
-              style="
-                font-size: 0.8rem;
-                line-height: 1.7;
-                color: var(--text-sub);
-              "
-            >
-              <p
-                style="
-                  font-weight: 700;
-                  color: var(--cream);
-                  margin-bottom: 8px;
-                "
-              >
-                Langkah 1 — Buat Google Sheet
-              </p>
-              <p style="margin-bottom: 16px">
-                Buka <strong style="color: #4ade80">sheets.google.com</strong> →
-                buat spreadsheet baru → beri nama "Laporan Tajir Coffee".
-              </p>
-
-              <p
-                style="
-                  font-weight: 700;
-                  color: var(--cream);
-                  margin-bottom: 8px;
-                "
-              >
-                Langkah 2 — Buka Apps Script
-              </p>
-              <p style="margin-bottom: 16px">
-                Di Google Sheets klik menu
-                <strong style="color: var(--red-light)"
-                  >Ekstensi → Apps Script</strong
-                >. Hapus kode yang ada, paste kode berikut:
-              </p>
-
-              <div
-                style="
-                  background: var(--dark-mid);
-                  border: 1px solid rgba(163, 29, 29, 0.3);
-                  border-radius: 12px;
-                  padding: 16px;
-                  font-size: 0.7rem;
-                  font-family: monospace;
-                  line-height: 1.7;
-                  color: #d1fae5;
-                  overflow-x: auto;
-                  margin-bottom: 16px;
-                  white-space: pre-wrap;
-                "
-              >
-                function doPost(e) { var sheet = SpreadsheetApp
-                .getActiveSpreadsheet() .getSheetByName("Laporan"); if (!sheet)
-                { sheet = SpreadsheetApp .getActiveSpreadsheet()
-                .insertSheet("Laporan"); sheet.appendRow([
-                "Tanggal","Menu","Laku","Stok", "Harga Satuan","Subtotal",
-                "Total Kotor","Biaya","Profit" ]); } var data =
-                JSON.parse(e.postData.contents); data.rows.forEach(function(row)
-                { sheet.appendRow(row); }); return ContentService
-                .createTextOutput(JSON.stringify({status:"ok"}))
-                .setMimeType(ContentService.MimeType.JSON); }
-              </div>
-
-              <p
-                style="
-                  font-weight: 700;
-                  color: var(--cream);
-                  margin-bottom: 8px;
-                "
-              >
-                Langkah 3 — Deploy sebagai Web App
-              </p>
-              <p style="margin-bottom: 6px">
-                1. Klik tombol
-                <strong style="color: var(--red-light)"
-                  >Deploy → New Deployment</strong
-                >
-              </p>
-              <p style="margin-bottom: 6px">
-                2. Pilih tipe:
-                <strong style="color: var(--red-light)">Web App</strong>
-              </p>
-              <p style="margin-bottom: 6px">
-                3. "Execute as": pilih
-                <strong style="color: var(--cream)">Me</strong>
-              </p>
-              <p style="margin-bottom: 6px">
-                4. "Who has access": pilih
-                <strong style="color: var(--cream)">Anyone</strong>
-              </p>
-              <p style="margin-bottom: 16px">
-                5. Klik <strong style="color: #4ade80">Deploy</strong> → salin
-                URL yang muncul
-              </p>
-
-              <p
-                style="
-                  font-weight: 700;
-                  color: var(--cream);
-                  margin-bottom: 8px;
-                "
-              >
-                Langkah 4 — Tempel URL di Kasir ini
-              </p>
-              <p style="margin-bottom: 12px">
-                Masukkan URL Web App kamu di bawah ini, lalu klik Simpan:
-              </p>
-
-              <input
-                type="text"
-                id="sheets-url-input"
-                placeholder="https://script.google.com/macros/s/..."
-                style="
-                  background: var(--dark-mid);
-                  border: 1px solid rgba(163, 29, 29, 0.4);
-                  border-radius: 10px;
-                  color: var(--cream);
-                  padding: 12px;
-                  font-size: 0.8rem;
-                  width: 100%;
-                  font-family: inherit;
-                  outline: none;
-                  margin-bottom: 10px;
-                "
-              />
-              <button
-                onclick="saveSheetUrl()"
-                style="
-                  width: 100%;
-                  padding: 12px;
-                  background: var(--red-primary);
-                  border: none;
-                  border-radius: 12px;
-                  color: #fff;
-                  font-size: 0.8rem;
-                  font-weight: 700;
-                  font-family: inherit;
-                  cursor: pointer;
-                  box-shadow: 0 4px 12px var(--red-glow);
-                "
-              >
-                💾 Simpan URL
-              </button>
-
-              <div
-                id="url-saved-msg"
-                class="hidden"
-                style="
-                  margin-top: 10px;
-                  text-align: center;
-                  font-size: 0.75rem;
-                  color: #4ade80;
-                  font-weight: 700;
-                "
-              >
-                ✅ URL tersimpan! Tombol "Kirim ke Google Sheets" sudah aktif.
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- HANYA BAGIAN JS YANG DIUBAH, HTML & CSS TETAP SAMA -->
     <script>
       // ============================================================
-      // TAJIR COFFEE — LOGIC JS v4 (Stok Per Menu)
+      // TAJIR COFFEE — FINAL FIX (Sheets + Bug Fix)
       // ============================================================
 
       const MENUS = [
@@ -1023,18 +912,12 @@
         { id: "ar", name: "Aren Tajir", price: 13000, cat: "coffee" },
         { id: "ma", name: "Matcha Tajir", price: 15000, cat: "non" },
         { id: "rv", name: "Red Velvet Tajir", price: 12000, cat: "non" },
+        { id: "br", name: "Brown Tajir", price: 13000, cat: "non" },
       ];
 
-      // ─── Data Structure Baru ───────────────────────────────────
-      // {
-      //   stok: { id_menu: jumlah },
-      //   jual: { id_menu: jumlah }
-      // }
-      // ──────────────────────────────────────────────────────────
-
       function defaultDb() {
-        const stok = {};
-        const jual = {};
+        const stok = {},
+          jual = {};
         MENUS.forEach((m) => {
           stok[m.id] = 0;
           jual[m.id] = 0;
@@ -1042,36 +925,15 @@
         return { stok, jual };
       }
 
-      // Load dari localStorage — migrasi otomatis jika format lama
       function loadDb() {
         try {
           const raw = localStorage.getItem("tajir_v4");
           if (raw) return JSON.parse(raw);
-
-          // Coba migrasi dari v3 (format lama)
-          const oldRaw = localStorage.getItem("tajir_v3");
-          if (oldRaw) {
-            const old = JSON.parse(oldRaw);
-            const db = defaultDb();
-            // Salin data jual yang sudah ada
-            MENUS.forEach((m) => {
-              db.jual[m.id] = old.jual?.[m.id] || 0;
-            });
-            return db;
-          }
-        } catch (e) {
-          /* ignore */
-        }
+        } catch {}
         return defaultDb();
       }
 
       let db = loadDb();
-
-      // Google Sheets URL (sudah terhubung langsung)
-      const sheetsUrl =
-        "https://script.google.com/macros/s/AKfycbwWVhiLJdIzTFSlsuf1UcELhg7-bwrrAv7UnxLbALhJi-xeSNK58gJ-wcPKmYvhwFeTDw/exec";
-
-      // ─── Helpers ──────────────────────────────────────────────
 
       function save() {
         localStorage.setItem("tajir_v4", JSON.stringify(db));
@@ -1082,25 +944,6 @@
         return "Rp " + n.toLocaleString("id-ID");
       }
 
-      /** Total stok semua menu yang tersisa (belum terjual) */
-      function getTotalSisa() {
-        return MENUS.reduce((sum, m) => {
-          const sisa = (db.stok[m.id] || 0) - (db.jual[m.id] || 0);
-          return sum + Math.max(0, sisa);
-        }, 0);
-      }
-
-      /** Total stok awal seluruh menu */
-      function getTotalStok() {
-        return MENUS.reduce((sum, m) => sum + (db.stok[m.id] || 0), 0);
-      }
-
-      /** Total cup terjual */
-      function getTotalJual() {
-        return MENUS.reduce((sum, m) => sum + (db.jual[m.id] || 0), 0);
-      }
-
-      /** Total uang masuk */
       function getTotalCash() {
         return MENUS.reduce(
           (sum, m) => sum + (db.jual[m.id] || 0) * m.price,
@@ -1108,7 +951,37 @@
         );
       }
 
-      // ─── Init: Render Halaman Stok ─────────────────────────────
+      function getTotalJual() {
+        return MENUS.reduce((s, m) => s + (db.jual[m.id] || 0), 0);
+      }
+
+      function getTotalSisa() {
+        return MENUS.reduce((s, m) => {
+          return s + Math.max(0, (db.stok[m.id] || 0) - (db.jual[m.id] || 0));
+        }, 0);
+      }
+
+      function getTotalStok() {
+        return MENUS.reduce((s, m) => s + (db.stok[m.id] || 0), 0);
+      }
+
+      // Clock
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, "0");
+        const min = String(now.getMinutes()).padStart(2, "0");
+        const sec = String(now.getSeconds()).padStart(2, "0");
+        const d = now.toLocaleDateString("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+        document.getElementById("clock").innerText =
+          `${d}  •  ${h}:${min}:${sec}`;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
 
       function init() {
         renderStok();
@@ -1116,134 +989,99 @@
       }
 
       function renderStok() {
-        const container = document.getElementById("stok-container");
+        const c = document.getElementById("stok-container");
 
-        // Render satu baris per menu
-        const rows = MENUS.map(
-          (m) => `
-    <div class="stok-row">
-      <div>
-        <div class="stok-name">${m.name}</div>
-        <div class="stok-price">${fmt(m.price)} per cup</div>
-      </div>
-      <input
-        type="number"
-        min="0"
-        value="${db.stok[m.id] || 0}"
-        class="qty-input"
-        oninput="setStok('${m.id}', this.value)"
-      >
-    </div>
-  `,
-        ).join("");
+        // Group by category
+        const coffeeItems = MENUS.filter((m) => m.cat === "coffee");
+        const nonItems = MENUS.filter((m) => m.cat === "non");
 
-        // Baris total stok di bagian bawah
-        const totalRow = `
-    <div class="stok-row" id="stok-total-row" style="margin-top:8px; border-top: 1px solid rgba(163,29,29,0.3); padding-top:12px;">
-      <div>
-        <div class="stok-name" style="color: var(--gold);">Total Semua Stok</div>
-        <div class="stok-price">Jumlah seluruh cup tersedia</div>
-      </div>
-      <div id="stok-total-val" style="
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: var(--gold);
-        min-width: 64px;
-        text-align: center;
-      ">${getTotalStok()}</div>
-    </div>
-  `;
+        function buildRows(items) {
+          return items
+            .map(
+              (m) => `
+            <div class="stok-row">
+              <div>
+                <div class="stok-name">${m.name}</div>
+                <div class="stok-price">${fmt(m.price)}</div>
+              </div>
+              <input type="number" value="${db.stok[m.id]}"
+                class="qty-input"
+                oninput="setStok('${m.id}', this.value)">
+            </div>
+          `,
+            )
+            .join("");
+        }
 
-        container.innerHTML = rows + totalRow;
+        c.innerHTML = `
+          <div class="cat-pill">☕ Coffee</div>
+          ${buildRows(coffeeItems)}
+          <div class="cat-pill" style="margin-top:14px">🧋 Non-Coffee</div>
+          ${buildRows(nonItems)}
+        `;
       }
 
       function setStok(id, val) {
-        const n = parseInt(val) || 0;
-        db.stok[id] = Math.max(0, n);
-
-        // Pastikan stok tidak boleh di bawah jumlah yang sudah terjual
-        if (db.stok[id] < db.jual[id]) {
-          db.jual[id] = db.stok[id];
-        }
-
+        db.stok[id] = Math.max(0, parseInt(val) || 0);
+        if (db.stok[id] < db.jual[id]) db.jual[id] = db.stok[id];
         save();
-
-        // Update angka total stok tanpa re-render penuh
-        const totalEl = document.getElementById("stok-total-val");
-        if (totalEl) totalEl.innerText = getTotalStok();
       }
 
-      // ─── Render Halaman Jual ──────────────────────────────────
-
       function renderJual() {
-        const container = document.getElementById("jual-container");
+        const c = document.getElementById("jual-container");
 
-        function renderList(list) {
-          return list
+        // Group by category
+        const coffeeItems = MENUS.filter((m) => m.cat === "coffee");
+        const nonItems = MENUS.filter((m) => m.cat === "non");
+
+        function buildRows(items) {
+          return items
             .map((m) => {
-              const laku = db.jual[m.id] || 0;
-              const sisa = Math.max(0, (db.stok[m.id] || 0) - laku);
+              const laku = db.jual[m.id];
+              const sisa = Math.max(0, db.stok[m.id] - laku);
+              const id = m.id;
               return `
-        <div class="jual-row">
-          <div>
-            <div class="jual-name">${m.name}</div>
-            <div class="jual-meta">${fmt(m.price)} · Sisa: ${sisa} cup</div>
-          </div>
-          <div class="counter">
-            <button class="btn-minus" onclick="adj('${m.id}', -1)">−</button>
-            <span class="counter-val">${laku}</span>
-            <button class="btn-plus" onclick="adj('${m.id}', 1)">+</button>
-          </div>
-        </div>
-      `;
+              <div class="jual-row">
+                <div>
+                  <div class="jual-name">${m.name}</div>
+                  <div class="jual-meta">${fmt(m.price)} · Sisa: ${sisa}</div>
+                </div>
+                <div class="counter">
+                  <button class="btn-minus" onclick="adj('${id}',-1)">−</button>
+                  <span class="counter-val">${laku}</span>
+                  <button class="btn-plus" onclick="adj('${id}',1)">+</button>
+                </div>
+              </div>
+            `;
             })
             .join("");
         }
 
-        const coffee = MENUS.filter((m) => m.cat === "coffee");
-        const non = MENUS.filter((m) => m.cat === "non");
-
-        container.innerHTML = `
-    <div style="margin-bottom:10px;font-weight:700;color:#e03030;">☕ Coffee</div>
-    ${renderList(coffee)}
-    <div style="margin:15px 0 10px;font-weight:700;color:#4ade80;">🥤 Non Coffee</div>
-    ${renderList(non)}
-  `;
+        c.innerHTML = `
+          <div class="cat-pill">☕ Coffee</div>
+          ${buildRows(coffeeItems)}
+          <div class="cat-pill" style="margin-top:14px">🧋 Non-Coffee</div>
+          ${buildRows(nonItems)}
+        `;
       }
 
-      /** Tambah / kurang penjualan untuk satu menu */
       function adj(id, val) {
-        const stokMenu = db.stok[id] || 0;
-        const lakuMenu = db.jual[id] || 0;
-
-        if (val > 0 && lakuMenu >= stokMenu) {
-          alert(
-            "Stok " + MENUS.find((m) => m.id === id)?.name + " sudah habis!",
-          );
+        if (val > 0 && db.jual[id] >= db.stok[id]) {
+          alert("Stok habis!");
           return;
         }
-
-        db.jual[id] = Math.max(0, lakuMenu + val);
+        db.jual[id] = Math.max(0, db.jual[id] + val);
         save();
         renderJual();
       }
 
-      // ─── Update Bar Total (bagian bawah halaman Jual) ─────────
-
       function updateTotal() {
-        const cash = getTotalCash();
-        const cups = getTotalJual();
-        const sisa = getTotalSisa();
-
-        document.getElementById("total-money").innerText = fmt(cash);
-        document.getElementById("total-qty").innerText = cups + " Cup";
+        document.getElementById("total-money").innerText = fmt(getTotalCash());
+        document.getElementById("total-qty").innerText =
+          getTotalJual() + " Cup";
         document.getElementById("sisa-stok").innerText =
-          "Sisa: " + sisa + " Cup";
-
-        window.currentGross = cash;
+          "Sisa: " + getTotalSisa() + " Cup";
       }
-
-      // ─── Tab Navigation ───────────────────────────────────────
 
       function showTab(t) {
         document
@@ -1252,47 +1090,36 @@
         document
           .getElementById("section-jual")
           .classList.toggle("hidden", t !== "jual");
-
-        if (t === "jual") renderJual();
-        if (t === "stok") renderStok();
-
         document
           .getElementById("btn-stok")
           .classList.toggle("active", t === "stok");
         document
           .getElementById("btn-jual")
           .classList.toggle("active", t === "jual");
+        if (t === "jual") renderJual();
       }
-
-      // ─── Laporan ──────────────────────────────────────────────
 
       function generateReport() {
         const gross = getTotalCash();
         document.getElementById("rep-gross").innerText = fmt(gross);
-        window.currentGross = gross;
-
-        // Reset input biaya & net
-        document.getElementById("biaya").value = "";
         document.getElementById("rep-net").innerText = fmt(gross);
+        document.getElementById("biaya").value = "";
 
-        // Render detail per menu
-        const items = MENUS.map((m) => {
-          const laku = db.jual[m.id] || 0;
-          const stok = db.stok[m.id] || 0;
+        document.getElementById("report-items").innerHTML = MENUS.map((m) => {
+          const laku = db.jual[m.id];
           const subtotal = laku * m.price;
-          const isEmpty = laku === 0;
-
+          const isZero = laku === 0;
           return `
-      <div class="rep-row ${isEmpty ? "rep-zero" : ""}">
-        <span class="rep-name">${m.name}</span>
-        <span class="rep-qty">${laku} / ${stok} cup</span>
-        <span class="rep-subtotal">${isEmpty ? "—" : fmt(subtotal)}</span>
-      </div>
-    `;
+            <div class="rep-row${isZero ? " rep-zero" : ""}">
+              <span class="rep-name">${m.name}</span>
+              <span class="rep-qty">${laku} cup</span>
+              <span class="rep-subtotal">${fmt(subtotal)}</span>
+            </div>
+          `;
         }).join("");
 
-        document.getElementById("report-items").innerHTML = items;
         document.getElementById("modal").style.display = "block";
+        document.getElementById("modal").scrollTop = 0;
       }
 
       function closeModal() {
@@ -1300,98 +1127,67 @@
       }
 
       function calcNet() {
-        const exp = parseInt(document.getElementById("biaya").value) || 0;
-        const net = window.currentGross - exp;
-        document.getElementById("rep-net").innerText = fmt(net);
+        const biaya = parseInt(document.getElementById("biaya").value) || 0;
+        const gross = getTotalCash();
+        document.getElementById("rep-net").innerText = fmt(gross - biaya);
       }
-
-      // ─── Reset ────────────────────────────────────────────────
 
       function resetApp() {
-        if (confirm("Reset semua data stok dan penjualan?")) {
-          localStorage.removeItem("tajir_v4");
-          localStorage.removeItem("tajir_v3");
-          location.reload();
-        }
+        if (!confirm("Yakin hapus semua data hari ini?")) return;
+        localStorage.removeItem("tajir_v4");
+        location.reload();
       }
 
-      // ─── Google Sheets ────────────────────────────────────────
+      // ================= GOOGLE SHEETS =================
+
+      function getSheetsUrl() {
+        return localStorage.getItem("tajir_sheets_url") || "";
+      }
+
+      let sending = false;
 
       function kirimSheets() {
+        if (sending) {
+          alert("⏳ Data sedang dikirim, tunggu sebentar...");
+          return;
+        }
+        sending = true;
+
+        const url = getSheetsUrl();
+        if (!url) {
+          alert("Isi URL Sheets dulu!");
+          sending = false;
+          return;
+        }
+
         const biaya = parseInt(document.getElementById("biaya").value) || 0;
         const gross = getTotalCash();
         const profit = gross - biaya;
-        const tanggal = new Date().toLocaleDateString("id-ID");
+        const tanggal = new Date().toLocaleString("id-ID");
+        const totalCup = getTotalJual();
 
-        const promises = MENUS.filter((m) => (db.jual[m.id] || 0) > 0).map(
-          (m) => {
-            const laku = db.jual[m.id];
-            const stok = db.stok[m.id] || 0;
-            const subtotal = laku * m.price;
+        // 1 baris horizontal:
+        // [Tanggal, Total Pendapatan, Total Cup, Biaya, Profit, lb_qty, bp_qty, sg_qty, hz_qty, ca_qty, ar_qty, ma_qty, rv_qty, br_qty]
+        const menuQtys = MENUS.map((m) => db.jual[m.id] || 0);
+        const row = [tanggal, gross, totalCup, biaya, profit, ...menuQtys];
 
-            const url =
-              sheetsUrl +
-              "?tanggal=" +
-              encodeURIComponent(tanggal) +
-              "&menu=" +
-              encodeURIComponent(m.name) +
-              "&laku=" +
-              laku +
-              "&stok=" +
-              stok +
-              "&harga=" +
-              m.price +
-              "&subtotal=" +
-              subtotal +
-              "&total=" +
-              gross +
-              "&biaya=" +
-              biaya +
-              "&profit=" +
-              profit;
-
-            return fetch(url)
-              .then((res) => res.text())
-              .catch((err) => console.error("Sheets error:", err));
-          },
-        );
-
-        Promise.all(promises).then(() => {
-          alert("✅ Data berhasil dikirim ke Google Sheets!");
-        });
+        fetch(url, {
+          method: "POST",
+          body: JSON.stringify({ data: [row] }),
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+        })
+          .then((res) => res.text())
+          .then(() => {
+            alert("✅ Berhasil kirim ke Sheets");
+            sending = false;
+          })
+          .catch(() => {
+            alert("❌ Gagal kirim");
+            sending = false;
+          });
       }
 
-      // ─── Sheets Guide (UI helper, tidak berubah) ──────────────
-
-      function showSheetsGuide() {
-        const el = document.getElementById("sheets-guide");
-        el.classList.toggle("hidden");
-      }
-
-      function saveSheetUrl() {
-        const url = document.getElementById("sheets-url-input").value.trim();
-        if (!url) return alert("URL tidak boleh kosong!");
-        localStorage.setItem("tajir_sheets_url", url);
-        document.getElementById("url-saved-msg").classList.remove("hidden");
-      }
-
-      // ─── Clock ────────────────────────────────────────────────
-
-      function updateClock() {
-        const now = new Date();
-        document.getElementById("clock").innerText = now.toLocaleTimeString(
-          "id-ID",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          },
-        );
-      }
-      setInterval(updateClock, 1000);
-      updateClock();
-
-      // ─── Mulai ────────────────────────────────────────────────
+      // INIT
       init();
     </script>
   </body>
